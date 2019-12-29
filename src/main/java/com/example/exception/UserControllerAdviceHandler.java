@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -13,6 +15,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
 
 import com.example.model.ErrorDto;
 import com.example.model.FormFieldDto;
@@ -20,8 +23,12 @@ import com.example.model.FormFieldDto;
 @ControllerAdvice
 public class UserControllerAdviceHandler {
 
+	@Autowired
+	private ErrorAttributes errorAttributes;
+
 	@ExceptionHandler({ MethodArgumentNotValidException.class })
-	public ResponseEntity<ErrorDto> handleIllegalArgumentException(MethodArgumentNotValidException exception) {
+	public ResponseEntity<ErrorDto> handleIllegalArgumentException(MethodArgumentNotValidException exception,
+			WebRequest webRequest) {
 		BindingResult bindingResult = exception.getBindingResult();
 		List<FieldError> fieldErrors = bindingResult.getFieldErrors();
 		Map<String, FormFieldDto> maps = new HashMap<>();
@@ -56,8 +63,10 @@ public class UserControllerAdviceHandler {
 	}
 
 	@ExceptionHandler({ ResourceNotFoundException.class })
-	public ResponseEntity<ErrorDto> handleResourceNotFoundException(
-			ResourceNotFoundException resourceNotFoundException) {
+	public ResponseEntity<ErrorDto> handleResourceNotFoundException(ResourceNotFoundException resourceNotFoundException,
+			WebRequest webRequest) {
+		Map<String, Object> attr = errorAttributes.getErrorAttributes(webRequest, false);
+		System.out.println(attr);
 		ErrorDto errorDto = new ErrorDto(resourceNotFoundException.getMessage(), LocalDateTime.now(),
 				HttpStatus.NOT_FOUND.value(), null);
 		return new ResponseEntity<ErrorDto>(errorDto, HttpStatus.NOT_FOUND);

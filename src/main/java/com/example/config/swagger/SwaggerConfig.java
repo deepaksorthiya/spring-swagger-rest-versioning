@@ -18,15 +18,27 @@ public class SwaggerConfig {
 
 	@Bean
 	public Docket swaggerUserApi1() {
-		return new Docket(DocumentationType.SWAGGER_2).groupName("user-api-v1").select()
-				.paths(PathSelectors.regex("/api/v1.*")).build().apiInfo(new ApiInfoBuilder().version("1.0.0")
-						.title("User API V1").description("Documentation User API v1").build());
+		// @formatter:off
+		return new Docket(DocumentationType.SWAGGER_2)
+				.groupName("user-api-v1")
+				.select()
+				.paths(PathSelectors.regex("/api/v1.*"))
+				.build()
+				.apiInfo(new ApiInfoBuilder().version("1.0.0").title("User API V1").description("Documentation User API v1")
+				.build());
+		// @formatter:on
 	}
 
 	@Bean
 	public Docket swaggerUserApi2() {
-		return new Docket(DocumentationType.SWAGGER_2).groupName("user-api-v2").select()
-				.paths(PathSelectors.regex("/api/v2.*")).build().apiInfo(new ApiInfoBuilder().version("2.0.0")
-						.title("User API V2").description("Documentation User API v2").build());
+		// @formatter:off
+		return new Docket(DocumentationType.SWAGGER_2)
+				.groupName("user-api-v2")
+				.select()
+				.paths(PathSelectors.regex("/api/v2.*"))
+				.build()
+				.apiInfo(new ApiInfoBuilder().version("2.0.0").title("User API V2").description("Documentation User API v2")
+				.build());
+		// @formatter:on
 	}
 }
